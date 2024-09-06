@@ -1,4 +1,4 @@
-package co.edu.uniquindio.biblioteca.model;
+package co.edu.uniquindio.biblioteca.parcial1.model;
 
 import java.util.Collection;
 import java.util.LinkedList;
