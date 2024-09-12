@@ -11,6 +11,7 @@ public class Miembro {
     Collection<Prestamo> prestamosActivos;
 
     public Miembro(){
+        this.prestamosActivos = new LinkedList<>();
     }
 
     public Miembro(String nombre, String apellido, int idMiembro) {

@@ -1,12 +1,14 @@
 package co.edu.uniquindio.biblioteca.parcial1.model;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.LinkedList;
 import co.edu.uniquindio.biblioteca.parcial1.model.*;
 import co.edu.uniquindio.biblioteca.parcial1.services.ICrudLibro;
 import co.edu.uniquindio.biblioteca.parcial1.services.ICrudMiembro;
+import co.edu.uniquindio.biblioteca.parcial1.services.ICrudPrestamo;
 
-public class Biblioteca implements ICrudMiembro, ICrudLibro {
+public class Biblioteca implements ICrudMiembro, ICrudLibro, ICrudPrestamo {
 
     String nombre;
     Collection<Miembro> listaMiembros;
@@ -90,19 +92,75 @@ public class Biblioteca implements ICrudMiembro, ICrudLibro {
 
     public Collection<Revista> getListaRevistas() { return listaRevistas; }
 
+    /**
+     * Verifica si un miembro ya existe  en la coleccion.
+     *
+     * @return un objeto miembro.
+     */
+
+
+    private Miembro verificarMiembro(String nombre, int idMiembro) {
+        Miembro miembroExistente = null;
+
+        for (Miembro miembro : listaMiembros) {
+            if (miembro.getNombre().equals(nombre) && miembro.getIdMiembro() == idMiembro) {
+                miembroExistente = miembro;
+                break;
+            }
+        }
+
+        return miembroExistente;
+    }
+
+    /**
+     * Verifica si un libro ya existe  en la coleccion.
+     *
+     * @return un objeto libro.
+     */
+
+    private Libro verificarLibro(String titulo) {
+        Libro libroExistente = null;
+
+        for (Libro libro : listaLibros) {
+            if (libro.getTitulo().equals(titulo)) {
+                libroExistente = libro;
+                break;
+            }
+        }
+
+        return libroExistente;
+    }
 
     @Override
-    public boolean aagregarLibro(int idMiembro) {
+    public boolean crearLibro(String titulo, String autor, EstadoItem estado) {
+        Libro newLibro = new Libro();
+        Libro libroExistente = verificarLibro(titulo);
+
+        if (libroExistente == null) {
+            newLibro.setTitulo(titulo);
+            newLibro.setAutor(autor);
+            newLibro.setEstado(estado);
+            listaLibros.add(newLibro);
+
+            return true;
+        }
+
+        return false;
+
+    }
+
+    @Override
+    public boolean eliminarLibro(String titulo) {
+        Libro libro = verificarLibro(titulo);
+        if (libro != null) {
+            listaLibros.remove(libro);
+            return true;
+        }
         return false;
     }
 
     @Override
-    public boolean eliminarLibro(String nombre) {
-        return false;
-    }
-
-    @Override
-    public boolean modificarLibro(String nombre, int edad) {
+    public boolean modificarLibro(String titulo, String autor, EstadoItem estado) {
         return false;
     }
 
@@ -112,17 +170,33 @@ public class Biblioteca implements ICrudMiembro, ICrudLibro {
     }
 
     @Override
-    public boolean agregarMiembro(int idMiembro) {
+    public boolean crearMiembro(String nombre, String apellido, int idMiembro) {
+        Miembro newMimbro = new Miembro();
+        Miembro miembroExistente = verificarMiembro(nombre, idMiembro);
+
+        if (miembroExistente == null) {
+            newMimbro.setNombre(nombre);
+            newMimbro.setApellido(apellido);
+            newMimbro.setIdMiembro(idMiembro);
+            listaMiembros.add(newMimbro);
+
+            return true;
+        }
         return false;
     }
 
     @Override
-    public boolean eliminarMiembro(String nombre) {
+    public boolean eliminarMiembro(int idMiembro) {
+        Miembro miembro = verificarMiembro(nombre, idMiembro);
+        if (miembro != null) {
+            listaMiembros.remove(miembro);
+            return true;
+        }
         return false;
     }
 
     @Override
-    public boolean modificarMiembro(String nombre, int edad) {
+    public boolean modificarMiembro(String nombre, String apellido, int idMiembro) {
         return false;
     }
 
@@ -130,4 +204,83 @@ public class Biblioteca implements ICrudMiembro, ICrudLibro {
     public Miembro getMiembro(String nombre) {
         return null;
     }
+
+    /**
+     * Metodo para buscar un miembro por su ID.
+     *
+     * @param {int} idMiembro - El ID del miembro que se desea buscar.
+     * @return {Miembro} El miembro encontrado o null si no se encuentra.
+     */
+    private Miembro buscarMiembroPorId(int idMiembro) {
+        for (Miembro miembro : listaMiembros) {
+            if (miembro.getIdMiembro() == idMiembro) {
+                return miembro;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Metodo para buscar un libro por su título.
+     *
+     * @param {String} tituloLibro - El título del libro que se desea buscar.
+     * @return {Libro} El libro encontrado o null si no se encuentra.
+     */
+    private Libro buscarLibroPorTitulo(String tituloLibro) {
+        for (Libro libro : listaLibros) {
+            if (libro.getTitulo().equalsIgnoreCase(tituloLibro)) {
+                return libro;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Metodo para verificar la disponibilidad de un libro.
+     *
+     * @param {Libro} libro.
+     * @return {Boolean} Confirmacion booleana del estado del libro..
+     */
+
+    public boolean verificarDisponibilidadLibro(Libro libro) {
+        return libro.getEstado() == EstadoItem.DISPONIBLE;
+
+    }
+
+    /**
+     * Metodo para crear un préstamo.
+     *
+     * @param {String} tituloLibro - El título del libro que se desea prestar.
+     * @param {int} idMiembro - El ID del miembro que solicita el préstamo.
+     * @return {Boolean} Confirmación booleana de si el préstamo fue exitoso.
+     */
+
+
+    @Override
+    public boolean crearPrestamo(String tituloLibro, int idMiembro) {
+        Libro libro = buscarLibroPorTitulo(tituloLibro);
+        Miembro miembro = buscarMiembroPorId(idMiembro);
+
+        if (libro != null && miembro != null && verificarDisponibilidadLibro(libro)) {
+            Prestamo nuevoPrestamo = new Prestamo(LocalDate.now(), null, libro, miembro);
+            libro.setEstado(EstadoItem.PRESTADO);
+            miembro.getPrestamosActivos().add(nuevoPrestamo);
+            listaPrestamos.add(nuevoPrestamo);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean eliminarPrestamo(String tituloLibro, int idMiembro) {
+        return false;
+    }
+
+    @Override
+    public Prestamo getPrestamo() {
+        return null;
+    }
+
+
+
 }

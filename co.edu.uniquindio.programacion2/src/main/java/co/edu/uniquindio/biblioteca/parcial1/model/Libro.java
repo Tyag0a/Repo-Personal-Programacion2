@@ -2,17 +2,21 @@ package co.edu.uniquindio.biblioteca.parcial1.model;
 
 public class Libro extends Item{
 
-    public String Isbn;
+    public String isbn;
 
     public Libro(){
     }
 
-    public Libro(String titulo, String autor, EstadoItem estado){
+    public Libro(String titulo, String autor, EstadoItem estado, String isbn){
         super(titulo, autor, estado);
 
     }
 
-    public String getIsbn() { return Isbn; }
+    public static LibroBuilder builder() {
+        return new LibroBuilder();
+    }
 
-    public void setIsbn(String isbn) { Isbn = isbn; }
+    public String getIsbn() { return isbn; }
+
+    public void setIsbn(String isbn) { isbn = isbn; }
 }

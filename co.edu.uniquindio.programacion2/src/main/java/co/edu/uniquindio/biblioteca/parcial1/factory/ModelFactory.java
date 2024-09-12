@@ -4,9 +4,9 @@ import co.edu.uniquindio.biblioteca.parcial1.model.*;
 import co.edu.uniquindio.biblioteca.parcial1.services.*;
 import java.time.LocalDate;
 
-//Clase singlenton
+//Clase singleton
 
-public class ModelFactory implements ICrudLibro, ICrudMiembro {
+public class ModelFactory implements ICrudLibro, ICrudMiembro, ICrudPrestamo {
 
     private static ModelFactory instance;
     private static Biblioteca biblioteca;
@@ -14,6 +14,19 @@ public class ModelFactory implements ICrudLibro, ICrudMiembro {
     private ModelFactory() {
         inicializarDatos();
     }
+
+    public static ModelFactory getInstance() {
+        if (instance == null) {
+            instance = new ModelFactory();
+        }
+        return instance;
+    }
+
+    /**
+     * Inicializa los datos de la biblioteca, incluyendo miembros, libros y prestamos.
+     *
+     * @return una instancia de Biblioteca con datos predefinidos.
+     */
 
     public static void inicializarDatos() {
 
@@ -56,27 +69,27 @@ public class ModelFactory implements ICrudLibro, ICrudMiembro {
         Miembro miembro1 = new Miembro();
         miembro1.setNombre("Juanito");
         miembro1.setApellido("Pérez");
-        miembro1.setIdMiembro(101);
+        miembro1.setIdMiembro(10);
 
         Miembro miembro2 = new Miembro();
         miembro2.setNombre("María");
         miembro2.setApellido("Rodríguez");
-        miembro2.setIdMiembro(102);
+        miembro2.setIdMiembro(11);
 
         Miembro miembro3 = new Miembro();
         miembro3.setNombre("Carlos");
         miembro3.setApellido("García");
-        miembro3.setIdMiembro(103);
+        miembro3.setIdMiembro(12);
 
         Miembro miembro4 = new Miembro();
         miembro4.setNombre("Luisa");
         miembro4.setApellido("Martínez");
-        miembro4.setIdMiembro(104);
+        miembro4.setIdMiembro(13);
 
         Miembro miembro5 = new Miembro();
         miembro5.setNombre("Jorge");
         miembro5.setApellido("Gómez");
-        miembro5.setIdMiembro(105);
+        miembro5.setIdMiembro(14);
 
         //Prestamos
 
@@ -110,25 +123,52 @@ public class ModelFactory implements ICrudLibro, ICrudMiembro {
         prestamo5.setLibroPrestamo(libro5);
         prestamo5.setMiembroPrestamo(miembro5);
 
+        // asignacion en biblioteca
+
+        biblioteca.getListaLibros().add(libro1);
+        biblioteca.getListaLibros().add(libro2);
+        biblioteca.getListaLibros().add(libro3);
+        biblioteca.getListaLibros().add(libro4);
+        biblioteca.getListaLibros().add(libro5);
+        biblioteca.getListaLibros().add(libro6);
+
+        biblioteca.getListaMiembros().add(miembro1);
+        biblioteca.getListaMiembros().add(miembro2);
+        biblioteca.getListaMiembros().add(miembro3);
+        biblioteca.getListaMiembros().add(miembro4);
+        biblioteca.getListaMiembros().add(miembro5);
+
+        biblioteca.getListaPrestamos().add(prestamo1);
+        biblioteca.getListaPrestamos().add(prestamo2);
+        biblioteca.getListaPrestamos().add(prestamo3);
+        biblioteca.getListaPrestamos().add(prestamo4);
+        biblioteca.getListaPrestamos().add(prestamo5);
+
+        miembro1.getPrestamosActivos().add(prestamo1);
+        miembro2.getPrestamosActivos().add(prestamo2);
+        miembro3.getPrestamosActivos().add(prestamo3);
+        miembro4.getPrestamosActivos().add(prestamo4);
+        miembro5.getPrestamosActivos().add(prestamo5);
+
+
 
 
 
 
     }
 
-
     @Override
-    public boolean aagregarLibro(int idMiembro) {
-        return false;
+    public boolean crearLibro(String titulo, String autor, EstadoItem estado) {
+        return biblioteca.crearLibro(titulo, autor, estado);
     }
 
     @Override
-    public boolean eliminarLibro(String nombre) {
-        return false;
+    public boolean eliminarLibro(String titulo) {
+        return biblioteca.eliminarLibro(titulo);
     }
 
     @Override
-    public boolean modificarLibro(String nombre, int edad) {
+    public boolean modificarLibro(String titulo, String autor, EstadoItem estado) {
         return false;
     }
 
@@ -138,22 +178,37 @@ public class ModelFactory implements ICrudLibro, ICrudMiembro {
     }
 
     @Override
-    public boolean agregarMiembro(int idMiembro) {
-        return false;
+    public boolean crearMiembro(String nombre, String apellido, int idMiembro) {
+        return biblioteca.crearMiembro(nombre, apellido, idMiembro);
     }
 
     @Override
-    public boolean eliminarMiembro(String nombre) {
-        return false;
+    public boolean eliminarMiembro(int idMiembro) {
+        return biblioteca.eliminarMiembro(idMiembro);
     }
 
     @Override
-    public boolean modificarMiembro(String nombre, int edad) {
+    public boolean modificarMiembro(String nombre, String apellido, int idMiembro) {
         return false;
     }
 
     @Override
     public Miembro getMiembro(String nombre) {
+        return null;
+    }
+
+    @Override
+    public boolean crearPrestamo(String tituloLibro, int idMiembro) {
+        return biblioteca.crearPrestamo(tituloLibro,idMiembro);
+    }
+
+    @Override
+    public boolean eliminarPrestamo(String tituloLibro, int idMiembro) {
+        return false;
+    }
+
+    @Override
+    public Prestamo getPrestamo() {
         return null;
     }
 }

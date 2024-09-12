@@ -4,14 +4,61 @@ package co.edu.uniquindio;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
-        }
     }
 }
+
+//Ejemplo PATRON PROTOTYPE:
+
+//Interface:
+
+// public interface IPrototypeCuenta extends Cloneable{
+//    IPrototypeCuenta clone();
+//}
+
+//Clase:
+
+//public class CuentaAH implements IPrototypeCuenta{
+//
+//    private String tipo;
+//    private double monto;
+//
+//    public CuentaAH() {
+//        tipo = "AHORRO";
+//    }
+//
+//    @Override
+//    public IPrototypeCuenta clone() {
+//        CuentaAH cuenta = null;
+//
+//        try {
+//            cuenta  = (CuentaAH) super.clone();
+//        } catch (CloneNotSupportedException e) {
+//            e.printStackTrace();
+//        }
+//        return cuenta;
+//    }
+//
+//    @Override
+//    public String toString() {
+//        return "CuentaAH [tipo=" + tipo + ", monto=" + monto + "]";
+//    }
+//
+//    public String getTipo() {
+//        return tipo;
+//    }
+//
+//    public void setTipo(String tipo) {
+//        this.tipo = tipo;
+//    }
+//
+//    public double getMonto() {
+//        return monto;
+//    }
+//
+//    public void setMonto(double monto) {
+//        this.monto = monto;
+//    }
+//}
+
+//Ejemplo PATRON FACTORY METHOD:
